@@ -23,6 +23,7 @@ $_['entry_county']              = 'Judet';
 $_['entry_locality']            = 'Localitate';
 $_['entry_name']                = 'Nume destinatar';
 $_['entry_address']             = 'Adresa livrare';
+$_['entry_postalcode']          = 'Cod Postal';
 $_['entry_contact']             = 'Persoana de contact';
 $_['entry_phone']               = 'Telefon';
 $_['entry_email']               = 'Email';

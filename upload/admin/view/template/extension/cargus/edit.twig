@@ -54,7 +54,7 @@
                                     <td>
                                         <select class="form-control" name="pickup_id">
                                             {% for pick in pickups %}
-                                                {% if pick.LocationId == cargus_preferinte_pickup %}
+                                                {% if pick.LocationId == awb.row.pickup_id %}
                                                     <option value="{{ pick.LocationId }}" selected="selected">{{ pick.Name ~' | ' ~ pick.LocalityName }}</option>
                                                 {% else %}
                                                     <option value="{{ pick.LocationId }}">{{ pick.Name ~ ' | ' ~ pick.LocalityName }}</option>
@@ -103,6 +103,10 @@
                                 <tr>
                                     <td>{{ entry_address }}</td>
                                     <td><textarea class="form-control" name="address">{{ awb.row.address }}</textarea></td>
+                                </tr>
+                                <tr>
+                                    <td>{{ entry_postalcode }}</td>
+                                    <td><textarea class="form-control" name="postcode">{{ awb.row.postcode }}</textarea></td>
                                 </tr>
                                 <tr>
                                     <td>{{ entry_contact }}</td>

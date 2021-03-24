@@ -37,5 +37,6 @@ $_['text_order']                = 'Order';
 $_['text_no_selection']         = 'Please select at least one row!';
 $_['text_changepickup']         = 'Change location';
 $_['text_pickup']               = 'Change Default Pickup Location';
+$_['text_postalcode']           = 'Please add the postal code for order';
 $_['choose_pickup_date']        = 'Choose pickup date';
 $_['button_sendorder']          = 'Send order';

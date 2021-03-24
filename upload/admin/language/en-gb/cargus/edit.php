@@ -23,6 +23,7 @@ $_['entry_county']              = 'County Name';
 $_['entry_locality']            = 'Locality Name';
 $_['entry_name']                = 'Recipient Name';
 $_['entry_address']             = 'Shipping Address';
+$_['entry_postalcode']          = 'Postal Code';
 $_['entry_contact']             = 'Contact Person';
 $_['entry_phone']               = 'Phone';
 $_['entry_email']               = 'Email';

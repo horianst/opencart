@@ -45,6 +45,7 @@ class ControllerExtensionCargusEdit extends Controller {
         $data['entry_locality'] = $this->language->get('entry_locality');
         $data['entry_name'] = $this->language->get('entry_name');
         $data['entry_address'] = $this->language->get('entry_address');
+        $data['entry_postalcode'] = $this->language->get('entry_postalcode');
         $data['entry_contact'] = $this->language->get('entry_contact');
         $data['entry_phone'] = $this->language->get('entry_phone');
         $data['entry_email'] = $this->language->get('entry_email');
@@ -153,6 +154,7 @@ class ControllerExtensionCargusEdit extends Controller {
                                 locality_name = '".$this->request->post['city']."',
                                 county_name = '".$this->request->post['zone_id']."',
                                 address = '".$this->request->post['address']."',
+                                postcode = '".$this->request->post['postcode']."',
                                 contact = '".$this->request->post['contact']."',
                                 phone = '".$this->request->post['phone']."',
                                 email = '".$this->request->post['email']."',

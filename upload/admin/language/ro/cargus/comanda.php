@@ -39,3 +39,4 @@ $_['text_changepickup']         = 'Schimbati punct de lucru';
 $_['text_pickup']               = 'Schimbare punct de lucru implicit';
 $_['choose_pickup_date']        = 'Alegeti data de ridicare';
 $_['button_sendorder']          = 'Trimite comanda';
+$_['text_postalcode']         = 'Va rog sa adaugati codul postal pentru comanda';

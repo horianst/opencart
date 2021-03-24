@@ -148,110 +148,117 @@ class ControllerExtensionCargusComanda extends Controller
                     if (isset($this->request->post['selected'])) {
                         $errors = array();
                         $successes = array();
+
                         foreach ($this->request->post['selected'] as $id) {
                             $row = $this->db->query(
                                 "SELECT * FROM awb_cargus WHERE barcode = '0' AND id = '" . addslashes($id) . "'"
                             );
 
-                            if ($row->row['shipping_code'] == 'cargus.franciza') {
-                                // se trimite catre franciza Cargus si nu catre adresa destinatarului
-                                $CountyName = $row->row['county_name'];
-                                $LocalityName = $row->row['locality_name'];
-                                $Address = 'Se va ridica de la sediul Cargus!';
-                                $Observations = 'SE VA RIDICA DE LA SEDIUL CARGUS | ' . $row->row['observations'];
+                            if(!$row->row['postcode']){
+                                $errors[] = $this->language->get('text_postalcode') . ' ' . $row->row['order_id'];
+                                continue;
                             } else {
-                                // se trimite catre adresa destinatarului
-                                $CountyName = $row->row['county_name'];
-                                $LocalityName = $row->row['locality_name'];
-                                $Address = $row->row['address'];
-                                $Observations = $row->row['observations'];
-                            }
-
-                            if ($row->num_rows > 0) {
-                                $fields = array(
-                                    'Sender' => array(
-                                        'LocationId' => $row->row['pickup_id']
-                                    ),
-                                    'Recipient' => array(
-                                        'LocationId' => null,
-                                        'Name' => $row->row['name'],
-                                        'CountyId' => null,
-                                        'CountyName' => $CountyName,
-                                        'LocalityId' => null,
-                                        'LocalityName' => $LocalityName,
-                                        'StreetId' => null,
-                                        'StreetName' => '-',
-                                        'AddressText' => $Address,
-                                        'ContactPerson' => $row->row['contact'],
-                                        'PhoneNumber' => $row->row['phone'],
-                                        'Email' => $row->row['email'],
-                                        'CodPostal' => $row->row['postcode']
-                                    ),
-                                    'Parcels' => $row->row['parcels'],
-                                    'Envelopes' => $row->row['envelopes'],
-                                    'TotalWeight' => $row->row['weight'],
-                                    'DeclaredValue' => $row->row['value'],
-                                    'CashRepayment' => $row->row['cash_repayment'],
-                                    'BankRepayment' => $row->row['bank_repayment'],
-                                    'OtherRepayment' => $row->row['other_repayment'],
-                                    'OpenPackage' => $row->row['openpackage'] == 1 ? true : false,
-                                    'ShipmentPayer' => $row->row['payer'],
-                                    'ServiceId' => $row->row['payer'] == 1 ? 34 : 4,
-                                    'MorningDelivery' => $row->row['morning_delivery'] == 1 ? true : false,
-                                    'SaturdayDelivery' => $row->row['saturday_delivery'] == 1 ? true : false,
-                                    'Observations' => $Observations,
-                                    'PackageContent' => $row->row['contents'],
-                                    'CustomString' => $row->row['order_id']
-                                );
-
-                                for ($i = 1; $i <= $row->row['parcels']; $i++) {
-                                    $fields['ParcelCodes'][] = array(
-                                        'Code' => 'C' . $i,
-                                        'Type' => 1,
-                                        'Weight' => 1,
-                                        'Length' => 20,
-                                        'Width' => 20,
-                                        'Height' => 10
-                                    );
-                                }
-
-                                for ($i = 1; $i <= $row->row['envelopes']; $i++) {
-                                    $fields['ParcelCodes'][] = array(
-                                        'Code' => 'P' . $i,
-                                        'Type' => 0
-                                    );
-                                }
-
-                                $cod_bara = $this->model_shipping_cargusclass->CallMethod(
-                                    'Awbs',
-                                    $fields,
-                                    'POST',
-                                    $token
-                                );
-
-                                if (is_array($cod_bara)) {
-                                    if (isset($cod_bara['error'])) {
-                                        $errors[] = $this->language->get(
-                                                'text_order'
-                                            ) . ' ' . $row->row['parcels'] . ': ' . $cod_bara['error'];
-                                    }
+                                if ($row->row['shipping_code'] == 'cargus.franciza') {
+                                    // se trimite catre franciza Cargus si nu catre adresa destinatarului
+                                    $CountyName = $row->row['county_name'];
+                                    $LocalityName = $row->row['locality_name'];
+                                    $Address = 'Se va ridica de la sediul Cargus!';
+                                    $Observations = 'SE VA RIDICA DE LA SEDIUL CARGUS | ' . $row->row['observations'];
                                 } else {
-                                    if ($cod_bara != '') {
-                                        $this->db->query(
-                                            "UPDATE awb_cargus SET barcode = '" . $cod_bara . "' WHERE id = '" . addslashes(
-                                                $id
-                                            ) . "'"
+                                    // se trimite catre adresa destinatarului
+                                    $CountyName = $row->row['county_name'];
+                                    $LocalityName = $row->row['locality_name'];
+                                    $Address = $row->row['address'];
+                                    $Observations = $row->row['observations'];
+                                }
+
+                                if ($row->num_rows > 0) {
+                                    $fields = array(
+                                        'Sender' => array(
+                                            'LocationId' => $row->row['pickup_id']
+                                        ),
+                                        'Recipient' => array(
+                                            'LocationId' => null,
+                                            'Name' => $row->row['name'],
+                                            'CountyId' => null,
+                                            'CountyName' => $CountyName,
+                                            'LocalityId' => null,
+                                            'LocalityName' => $LocalityName,
+                                            'StreetId' => null,
+                                            'StreetName' => '-',
+                                            'AddressText' => $Address,
+                                            'ContactPerson' => $row->row['contact'],
+                                            'PhoneNumber' => $row->row['phone'],
+                                            'Email' => $row->row['email'],
+                                            'CodPostal' => $row->row['postcode']
+                                        ),
+                                        'Parcels' => $row->row['parcels'],
+                                        'Envelopes' => $row->row['envelopes'],
+                                        'TotalWeight' => $row->row['weight'],
+                                        'DeclaredValue' => $row->row['value'],
+                                        'CashRepayment' => $row->row['cash_repayment'],
+                                        'BankRepayment' => $row->row['bank_repayment'],
+                                        'OtherRepayment' => $row->row['other_repayment'],
+                                        'OpenPackage' => $row->row['openpackage'] == 1 ? true : false,
+                                        'ShipmentPayer' => $row->row['payer'],
+                                        'MorningDelivery' => $row->row['morning_delivery'] == 1 ? true : false,
+                                        'SaturdayDelivery' => $row->row['saturday_delivery'] == 1 ? true : false,
+                                        'Observations' => $Observations,
+                                        'PackageContent' => $row->row['contents'],
+                                        'CustomString' => $row->row['order_id']
+                                    );
+
+                                    for ($i = 1; $i <= $row->row['parcels']; $i++) {
+                                        $fields['ParcelCodes'][] = array(
+                                            'Code' => 'C' . $i,
+                                            'Type' => 1,
+                                            'Weight' => 1,
+                                            'Length' => 20,
+                                            'Width' => 20,
+                                            'Height' => 10
                                         );
-                                        $successes[] = $cod_bara;
+                                    }
+
+                                    for ($i = 1; $i <= $row->row['envelopes']; $i++) {
+                                        $fields['ParcelCodes'][] = array(
+                                            'Code' => 'P' . $i,
+                                            'Type' => 0
+                                        );
+                                    }
+
+                                    $cod_bara = $this->model_shipping_cargusclass->CallMethod(
+                                        'Awbs',
+                                        $fields,
+                                        'POST',
+                                        $token
+                                    );
+
+                                    if (is_array($cod_bara)) {
+                                        if (isset($cod_bara['error'])) {
+                                            $errors[] = $this->language->get(
+                                                    'text_order'
+                                                ) . ' ' . $row->row['parcels'] . ': ' . $cod_bara['error'];
+                                        }
                                     } else {
-                                        $errors[] = 'Unknown error!';
+                                        if ($cod_bara != '') {
+                                            $this->db->query(
+                                                "UPDATE awb_cargus SET barcode = '" . $cod_bara . "' WHERE id = '" . addslashes(
+                                                    $id
+                                                ) . "'"
+                                            );
+                                            $successes[] = $cod_bara;
+                                        } else {
+                                            $errors[] = 'Unknown error!';
+                                        }
                                     }
                                 }
                             }
                         }
+
                         if (count($errors) > 0) {
                             $this->session->data['error'] = implode('; ', $errors);
                         }
+
                         if (count($successes) > 0) {
                             $c = count($successes);
                             $this->session->data['success'] = ($c == 1

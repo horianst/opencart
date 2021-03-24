@@ -74,7 +74,7 @@ class ModelExtensionShippingCargus extends Model {
                         'title'        => $this->language->get('text_description'),
                         'cost'         => $quote_price,
                         'tax_class_id' => $this->config->get('cargus_tax_class_id'),
-                        'text'         => $this->currency->format($this->tax->calculate($quote_price, $this->config->get('cargus_tax_class_id'), $this->config->get('config_tax')))
+                        'text'         => $this->currency->format($this->tax->calculate($quote_price, $this->config->get('cargus_tax_class_id'), $this->config->get('config_tax')), $this->config->get('config_currency'))
                     );
 
                     $method_data = array(
@@ -171,7 +171,7 @@ class ModelExtensionShippingCargus extends Model {
                     'OpenPackage' => $this->config->get('cargus_preferinte_openpackage') != 1 ? false : true,
                     'SaturdayDelivery' => $this->config->get('cargus_preferinte_saturday') != 1 ? false : true,
                     'MorningDelivery' => $this->config->get('cargus_preferinte_morning') != 1 ? false : true,
-                    'ShipmentPayer' => $this->config->get('cargus_preferinte_payer') != 'recipient' ? 1 : 2
+                    'ShipmentPayer' => $this->config->get('cargus_preferinte_payer') != 'recipient' ? 1 : 2                    
                 );
                 $calculate = $this->model_shipping_cargusclass->CallMethod('ShippingCalculation', $fields, 'POST', $token);
 

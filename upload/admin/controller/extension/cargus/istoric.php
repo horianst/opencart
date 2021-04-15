@@ -76,12 +76,12 @@ class ControllerExtensionCargusIstoric extends Controller {
         $this->model_shipping_cargusclass = new ModelExtensionShippingCargusClass();
 
         // setez url si key
-        $this->model_shipping_cargusclass->SetKeys($this->config->get('cargus_api_url'), $this->config->get('cargus_api_key'));
+        $this->model_shipping_cargusclass->SetKeys($this->config->get('shipping_cargus_api_url'), $this->config->get('shipping_cargus_api_key'));
 
         // UC login user
         $fields = array(
-            'UserName' => $this->config->get('cargus_username'),
-            'Password' => $this->config->get('cargus_password')
+            'UserName' => $this->config->get('shipping_cargus_username'),
+            'Password' => $this->config->get('shipping_cargus_password')
         );
         $token = $this->model_shipping_cargusclass->CallMethod('LoginUser', $fields, 'POST');
 

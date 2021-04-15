@@ -120,16 +120,6 @@
         </operation>
     </file>
 
-
-    <file path="catalog/controller/checkout/shipping_method.php">
-        <operation>
-            <search><![CDATA[ $results = $this->model_setting_extension->getExtensions('shipping'); ]]></search>
-            <add position="after"><![CDATA[
-            $this->config->set('shipping_cargus_status', $this->config->get('cargus_status'));
-                ]]></add>
-        </operation>
-    </file>
-
     <file path="catalog/model/total/coupon.php">
         <operation>
             <search><![CDATA[ public function getTotal(&$total_data, &$total, &$taxes) { ]]></search>

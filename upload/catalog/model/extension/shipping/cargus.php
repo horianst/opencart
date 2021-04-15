@@ -5,9 +5,9 @@ class ModelExtensionShippingCargus extends Model {
 
 		$this->language->load('shipping/cargus');
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('cargus_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('shipping_cargus_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 
-		if (!$this->config->get('cargus_geo_zone_id')) {
+		if (!$this->config->get('shipping_cargus_geo_zone_id')) {
 			$status = true;
 		} elseif ($query->num_rows) {
 			$status = true;
@@ -73,15 +73,15 @@ class ModelExtensionShippingCargus extends Model {
                         'code'         => 'cargus.destinatie',
                         'title'        => $this->language->get('text_description'),
                         'cost'         => $quote_price,
-                        'tax_class_id' => $this->config->get('cargus_tax_class_id'),
-                        'text'         => $this->currency->format($this->tax->calculate($quote_price, $this->config->get('cargus_tax_class_id'), $this->config->get('config_tax')), $this->config->get('config_currency'))
+                        'tax_class_id' => $this->config->get('shipping_cargus_tax_class_id'),
+                        'text'         => $this->currency->format($this->tax->calculate($quote_price, $this->config->get('shipping_cargus_tax_class_id'), $this->config->get('config_tax')), $this->config->get('config_currency'))
                     );
 
                     $method_data = array(
                         'code'       => 'cargus',
                         'title'      => $this->language->get('text_title'),
                         'quote'      => $quote_data,
-                        'sort_order' => $this->config->get('cargus_sort_order'),
+                        'sort_order' => $this->config->get('shipping_cargus_sort_order'),
                         'error'      => false
                     );
 
@@ -130,12 +130,12 @@ class ModelExtensionShippingCargus extends Model {
                 $this->model_shipping_cargusclass = new ModelExtensionShippingCargusClass();
 
                 // setez url si key
-                $this->model_shipping_cargusclass->SetKeys($this->config->get('cargus_api_url'), $this->config->get('cargus_api_key'));
+                $this->model_shipping_cargusclass->SetKeys($this->config->get('shipping_cargus_api_url'), $this->config->get('shipping_cargus_api_key'));
 
                 // UC login user
                 $fields = array(
-                    'UserName' => $this->config->get('cargus_username'),
-                    'Password' => $this->config->get('cargus_password')
+                    'UserName' => $this->config->get('shipping_cargus_username'),
+                    'Password' => $this->config->get('shipping_cargus_password')
                 );
                 $token = $this->model_shipping_cargusclass->CallMethod('LoginUser', $fields, 'POST');
 
@@ -184,7 +184,7 @@ class ModelExtensionShippingCargus extends Model {
                 $payer = $this->config->get('cargus_preferinte_payer');
 
                 if ($is_free && $payer != 'recipient' && $calculate['ExtraKmCost'] > 0) {
-                    $this->session->data['coupon_cargus'] = $this->tax->calculate(($calculate['Subtotal'] - $calculate['ExtraKmCost']), $this->config->get('cargus_tax_class_id'), $this->config->get('config_tax'));
+                    $this->session->data['coupon_cargus'] = $this->tax->calculate(($calculate['Subtotal'] - $calculate['ExtraKmCost']), $this->config->get('shipping_cargus_tax_class_id'), $this->config->get('config_tax'));
                 } else {
                     $this->session->data['coupon_cargus'] = 0;
                     unset($this->session->data['coupon_cargus']);
@@ -216,8 +216,8 @@ class ModelExtensionShippingCargus extends Model {
                     'code'         => 'cargus.destinatie',
                     'title'        => $this->language->get('text_description'),
                     'cost'         => $cost,
-                    'tax_class_id' => $this->config->get('cargus_tax_class_id'),
-                    'text'         => $this->currency->format($this->tax->calculate($cost, $this->config->get('cargus_tax_class_id'), $this->config->get('config_tax')), $this->config->get('config_currency'))
+                    'tax_class_id' => $this->config->get('shipping_cargus_tax_class_id'),
+                    'text'         => $this->currency->format($this->tax->calculate($cost, $this->config->get('shipping_cargus_tax_class_id'), $this->config->get('config_tax')), $this->config->get('config_currency'))
                 );
 
                 if ($this->config->get('cargus_preferinte_noextrakm') == 1 && $calculate['ExtraKmCost'] > 0) {
@@ -241,8 +241,8 @@ class ModelExtensionShippingCargus extends Model {
                         'code'         => 'cargus.franciza',
                         'title'        => $this->language->get('text_description_2'),
                         'cost'         => $cost_redus,
-                        'tax_class_id' => $this->config->get('cargus_tax_class_id'),
-                        'text'         => $this->currency->format($this->tax->calculate($cost_redus, $this->config->get('cargus_tax_class_id'), $this->config->get('config_tax')), $this->config->get('config_currency'))
+                        'tax_class_id' => $this->config->get('shipping_cargus_tax_class_id'),
+                        'text'         => $this->currency->format($this->tax->calculate($cost_redus, $this->config->get('shipping_cargus_tax_class_id'), $this->config->get('config_tax')), $this->config->get('config_currency'))
                     );
                 }
 
@@ -250,7 +250,7 @@ class ModelExtensionShippingCargus extends Model {
                     'code'       => 'cargus',
                     'title'      => $this->language->get('text_title'),
                     'quote'      => $quote_data,
-                    'sort_order' => $this->config->get('cargus_sort_order'),
+                    'sort_order' => $this->config->get('shipping_cargus_sort_order'),
                     'error'      => false
                 );
             }

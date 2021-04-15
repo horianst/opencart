@@ -21,6 +21,26 @@ $(function () {
         }
     }
 
+    function do_replace2() {
+        var element = $('[name="payment_address.city"]:in-viewport:visible');
+
+        var attr_name = element.attr('name');
+        var attr_class = element.attr('class');
+        var attr_id = element.attr('id');
+        var placeholder = element.attr('placeholder');
+        var value = element.val();
+
+        if (element != null) {
+            if ($('select[name="payment_address.country_id"]:in-viewport:visible').val() == 175 && $('select[name="payment_address.zone_id"]:in-viewport:visible').val()) {
+                $.post('index.php?route=extension/module/cargus/localitati&judet=' + $('select[name="payment_address.zone_id"]:in-viewport:visible').val() + '&val=' + value, function (data) {
+                    element.replaceWith('<select name="' + attr_name + '" placeholder="' + placeholder + '" class="' + attr_class + '" id="' + attr_id + '">' + data + '</select>');
+                });
+            } else {
+                element.replaceWith('<input type="text" name="' + attr_name + '" placeholder="' + placeholder + '" class="' + attr_class + '" id="' + attr_id + '" value="" />');
+            }
+        }
+    }
+
     var done = false;
     $(document).ajaxComplete(function (event, request, settings) {
         if (!done) {
@@ -41,5 +61,19 @@ $(function () {
 
     $(document).on('change', 'select[name="zone_id"]:in-viewport:visible', function () {
         do_replace();
+    });
+
+    $(document).on('change', 'select[name="payment_address.country_id"]:in-viewport:visible', function () {
+        var done = false;
+        $(document).ajaxComplete(function (event, request, settings) {
+            if (!done) {
+                do_replace2();
+                done = true;
+            }
+        });
+    });
+
+    $(document).on('change', 'select[name="payment_address.zone_id"]:in-viewport:visible', function () {
+        do_replace2();
     });
 });

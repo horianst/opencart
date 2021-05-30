@@ -173,11 +173,11 @@ class ControllerExtensionCargusComanda extends Controller
                                 }
 
                                 if ($row->num_rows > 0) {
-                                    $fields = array(
-                                        'Sender' => array(
+                                    $fields = [
+                                        'Sender' => [
                                             'LocationId' => $row->row['pickup_id']
-                                        ),
-                                        'Recipient' => array(
+                                        ],
+                                        'Recipient' => [
                                             'LocationId' => null,
                                             'Name' => $row->row['name'],
                                             'CountyId' => null,
@@ -191,7 +191,7 @@ class ControllerExtensionCargusComanda extends Controller
                                             'PhoneNumber' => $row->row['phone'],
                                             'Email' => $row->row['email'],
                                             'CodPostal' => $row->row['postcode']
-                                        ),
+                                        ],
                                         'Parcels' => $row->row['parcels'],
                                         'Envelopes' => $row->row['envelopes'],
                                         'TotalWeight' => $row->row['weight'],
@@ -199,14 +199,18 @@ class ControllerExtensionCargusComanda extends Controller
                                         'CashRepayment' => $row->row['cash_repayment'],
                                         'BankRepayment' => $row->row['bank_repayment'],
                                         'OtherRepayment' => $row->row['other_repayment'],
-                                        'OpenPackage' => $row->row['openpackage'] == 1 ? true : false,
+                                        'OpenPackage' => $row->row['openpackage'] == 1,
                                         'ShipmentPayer' => $row->row['payer'],
-                                        'MorningDelivery' => $row->row['morning_delivery'] == 1 ? true : false,
-                                        'SaturdayDelivery' => $row->row['saturday_delivery'] == 1 ? true : false,
+                                        'MorningDelivery' => $row->row['morning_delivery'] == 1,
+                                        'SaturdayDelivery' => $row->row['saturday_delivery'] == 1,
                                         'Observations' => $Observations,
                                         'PackageContent' => $row->row['contents'],
                                         'CustomString' => $row->row['order_id']
-                                    );
+                                    ];
+
+                                    if($this->config->get('shipping_cargus_has_service') == 1 &&  in_array($this->config->get('shipping_cargus_service'),[34, 35, 36])) {
+                                        $fields['ServiceId'] = $this->config->get('shipping_cargus_service');
+                                    }
 
                                     for ($i = 1; $i <= $row->row['parcels']; $i++) {
                                         $fields['ParcelCodes'][] = array(

@@ -171,8 +171,13 @@ class ModelExtensionShippingCargus extends Model {
                     'OpenPackage' => $this->config->get('cargus_preferinte_openpackage') != 1 ? false : true,
                     'SaturdayDelivery' => $this->config->get('cargus_preferinte_saturday') != 1 ? false : true,
                     'MorningDelivery' => $this->config->get('cargus_preferinte_morning') != 1 ? false : true,
-                    'ShipmentPayer' => $this->config->get('cargus_preferinte_payer') != 'recipient' ? 1 : 2                    
+                    'ShipmentPayer' => $this->config->get('cargus_preferinte_payer') != 'recipient' ? 1 : 2
                 );
+
+                if($this->config->get('shipping_cargus_has_service') == 1 &&  in_array($this->config->get('shipping_cargus_service'),[34, 35, 36])) {
+                    $fields['ServiceId'] = $this->config->get('shipping_cargus_service');
+                }
+
                 $calculate = $this->model_shipping_cargusclass->CallMethod('ShippingCalculation', $fields, 'POST', $token);
 
                 if (is_null($calculate)) {

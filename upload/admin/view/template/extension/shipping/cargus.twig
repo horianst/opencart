@@ -96,7 +96,27 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-sort-order">{{ entry_sort_order }}</label>
                         <div class="col-sm-10">
-                            <input type="text" name="shipping_cargus_sort_order" id="input-sort-order" value="{{ shipping_cargus_sort_order }}" placeholder="{{ entry_sort_order }}" id="input-sort-order" class="form-control" />
+                            <input type="text" name="shipping_cargus_sort_order" id="input-sort-order" value="{{ shipping_cargus_sort_order }}" placeholder="{{ entry_sort_order }}" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-sort-order">{{ entry_has_service }}</label>
+                        <div class="col-sm-10">
+                            <select name="shipping_cargus_has_service" id="input-service" class="form-control">
+                                <option value=0 {% if shipping_cargus_has_service == 0 %} selected="selected" {% endif %}>{{ text_has_service_false }}</option>
+                                <option value=1 {% if shipping_cargus_has_service == 1 %} selected="selected" {% endif %}>{{ text_has_service_true }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-service">{{ entry_service }}</label>
+                        <div class="col-sm-10">
+                            <select name="shipping_cargus_service" id="input-service" class="form-control">
+                                    <option value="" {% if shipping_cargus_service != 34 and  shipping_cargus_service != 35 and shipping_cargus_service != 36 %} selected="selected" {% endif %}>-</option>
+                                    <option value=34 {% if shipping_cargus_service == 34 %} selected="selected" {% endif %}>{{ text_standard }}</option>
+                                    <option value=35 {% if shipping_cargus_service == 35 %} selected="selected" {% endif %} >{{ text_standard_plus }}</option>
+                                    <option value=36 {% if shipping_cargus_service == 36 %} selected="selected" {% endif %}>{{ text_standard_pallet }}</option>
+                            </select>
                         </div>
                     </div>
                 </form>

@@ -174,8 +174,14 @@ class ModelExtensionShippingCargus extends Model {
                     'ShipmentPayer' => $this->config->get('cargus_preferinte_payer') != 'recipient' ? 1 : 2
                 );
 
-                if($this->config->get('shipping_cargus_has_service') == 1 &&  in_array($this->config->get('shipping_cargus_service'),[34, 35, 36])) {
-                    $fields['ServiceId'] = $this->config->get('shipping_cargus_service');
+                if($this->config->get('shipping_cargus_service') == 1) {
+                    if($total_weight <= 31){
+                        $fields['ServiceId'] = 34;
+                    } elseif ($total_weight <= 50){
+                        $fields['ServiceId'] = 35;
+                    } else {
+                        $fields['ServiceId'] = 36;
+                    }
                 }
 
                 $calculate = $this->model_shipping_cargusclass->CallMethod('ShippingCalculation', $fields, 'POST', $token);

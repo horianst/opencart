@@ -208,8 +208,14 @@ class ControllerExtensionCargusComanda extends Controller
                                         'CustomString' => $row->row['order_id']
                                     ];
 
-                                    if($this->config->get('shipping_cargus_has_service') == 1 &&  in_array($this->config->get('shipping_cargus_service'),[34, 35, 36])) {
-                                        $fields['ServiceId'] = $this->config->get('shipping_cargus_service');
+                                    if($this->config->get('shipping_cargus_service') == 1) {
+                                        if($row->row['weight'] <= 31){
+                                            $fields['ServiceId'] = 34;
+                                        } elseif ($row->row['weight'] <= 50){
+                                            $fields['ServiceId'] = 35;
+                                        } else {
+                                            $fields['ServiceId'] = 36;
+                                        }
                                     }
 
                                     for ($i = 1; $i <= $row->row['parcels']; $i++) {

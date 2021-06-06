@@ -89,8 +89,8 @@ class ControllerExtensionShippingCargus extends Controller {
 		$data['text_standard'] = $this->language->get('text_standard');
 		$data['text_standard_plus'] = $this->language->get('text_standard_plus');
 		$data['text_standard_pallet'] = $this->language->get('text_standard_pallet');
-		$data['text_has_service_false'] = $this->language->get('text_has_service_false');
-		$data['text_has_service_true'] = $this->language->get('text_has_service_true');
+		$data['text_service_false'] = $this->language->get('text_service_false');
+		$data['text_service_true'] = $this->language->get('text_service_true');
         $data['entry_api_url'] = $this->language->get('entry_api_url');
         $data['entry_api_key'] = $this->language->get('entry_api_key');
         $data['entry_username'] = $this->language->get('entry_username');
@@ -99,7 +99,6 @@ class ControllerExtensionShippingCargus extends Controller {
 		$data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
 		$data['entry_status'] = $this->language->get('entry_status');
 		$data['entry_sort_order'] = $this->language->get('entry_sort_order');
-		$data['entry_has_service'] = $this->language->get('entry_has_service');
 		$data['entry_service'] = $this->language->get('entry_service');
 		$data['button_save'] = $this->language->get('button_save');
 		$data['button_cancel'] = $this->language->get('button_cancel');
@@ -175,10 +174,10 @@ class ControllerExtensionShippingCargus extends Controller {
 			$data['shipping_cargus_status'] = $this->config->get('shipping_cargus_status');
 		}
 
-        if (isset($this->request->post['shipping_cargus_has_service'])) {
-            $data['shipping_cargus_has_service'] = $this->request->post['shipping_cargus_has_service'];
+        if (isset($this->request->post['shipping_cargus_sort_order'])) {
+            $data['shipping_cargus_sort_order'] = $this->request->post['shipping_cargus_sort_order'];
         } else {
-            $data['shipping_cargus_has_service'] = $this->config->get('shipping_cargus_has_service');
+            $data['shipping_cargus_sort_order'] = $this->config->get('shipping_cargus_sort_order');
         }
 
 		if (isset($this->request->post['shipping_cargus_service'])) {

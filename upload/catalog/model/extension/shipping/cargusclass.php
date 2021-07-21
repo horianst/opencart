@@ -8,9 +8,11 @@
  * @author Catalin Pantazi
  */
 class ModelExtensionShippingCargusClass extends Model {
-    private $key;
     private $curl;
+    private $key;
     public $url;
+    public $locationUrl;
+    public $locationKey;
 
     function __construct() {
         $this->curl = curl_init();
@@ -20,9 +22,11 @@ class ModelExtensionShippingCargusClass extends Model {
         curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
     }
 
-    function SetKeys($url, $key) {
+    function SetKeys($url, $key, $locationUrl = '', $locationKey = '') {
         $this->url = $url;
         $this->key = $key;
+        $this->locationUrl = $locationUrl;
+        $this->locationKey = $locationKey;
     }
 
     function CallMethod($function, $parameters = '', $verb, $token = null) {
@@ -84,6 +88,54 @@ class ModelExtensionShippingCargusClass extends Model {
                 'params' => $parameters,
                 'data' => $data
             ));
+            echo 'CURL Error<br/>';
+            print_r(curl_error($this->curl));
+            echo '</pre>';
+            die();
+        }
+    }
+
+    function CallLocationMethod() {
+
+        curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($this->curl, CURLOPT_URL, $this->locationUrl . '/PudoPoints');
+
+        $headers = array (
+            'Ocp-Apim-Subscription-Key: '.$this->locationKey,
+            'Ocp-Apim-Trace: true',
+            'Content-Type: application/json'
+        );
+
+        curl_setopt(
+            $this->curl,
+            CURLOPT_HTTPHEADER,
+            $headers
+        );
+
+        $result = curl_exec($this->curl);
+        $header = curl_getinfo($this->curl);
+
+        $data = json_decode($result, true);
+        $status = $header['http_code'];
+
+        if ($status == '200') {
+            if (is_array($data) && isset($data['message'])) {
+                return $data['message'];
+            } else {
+                return $data;
+            }
+        } else if ($status == '204') {
+            return null;
+        } else {
+            @ob_end_clean();
+            echo '<pre>';
+            echo 'Status<br/>';
+            print_r(array(
+                        'status' => $status,
+                        'method' => 'PudoPoints',
+                        'verb' => 'GET',
+                        'data' => $data
+                    ));
             echo 'CURL Error<br/>';
             print_r(curl_error($this->curl));
             echo '</pre>';

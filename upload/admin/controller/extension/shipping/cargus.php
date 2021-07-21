@@ -16,7 +16,7 @@ class ControllerExtensionShippingCargus extends Controller {
         }
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $install = "CREATE TABLE IF NOT EXISTS `awb_cargus` (
+            $awbTable = "CREATE TABLE IF NOT EXISTS `awb_cargus` (
                             `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
                             `order_id` int(11) NOT NULL,
                             `pickup_id` int(11) NOT NULL,
@@ -48,7 +48,32 @@ class ControllerExtensionShippingCargus extends Controller {
                             `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                         PRIMARY KEY (`id`)
                         ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
-            $this->db->query($install);
+            $this->db->query($awbTable);
+
+            $locationsTable = "CREATE TABLE IF NOT EXISTS `locations_cargus` (
+                            `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+                            `PudoId` INT(11) NOT NULL,
+                            `Name` TEXT NOT NULL,
+                            `LocationId` INT(11) NOT NULL,
+                            `CityId` INT(11) NOT NULL,
+                            `City` TEXT NOT NULL,
+                            `StreetId` INT(11) NOT NULL,
+                            `ZoneId` INT(11) NOT NULL,
+                            `PostalCode` TEXT NOT NULL,
+                            `AdditionalAddr` TEXT NOT NULL,
+                            `Longitude` FLOAT NOT NULL,
+                            `Latitude` FLOAT NOT NULL,
+                            `PointType` TEXT,
+                            `StreetNo` TEXT NOT NULL,
+                            `PaymentType` INT(11) NOT NULL,
+                            `CountyId` INT(11) NOT NULL,
+                            `County` TEXT NOT NULL,
+                            `Sector` TEXT,
+                            `StreetName` TEXT NOT NULL,
+                            `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                        PRIMARY KEY (`id`)
+                        ) ENGINE=MYISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
+            $this->db->query($locationsTable);
 
             $deleteExtension = "DELETE FROM `" . DB_PREFIX . "extension` WHERE `type` = 'shipping' AND `code` = 'cargus' ";
             $this->db->query($deleteExtension);
@@ -63,7 +88,7 @@ class ControllerExtensionShippingCargus extends Controller {
             $this->model_shipping_cargusclass = new ModelExtensionShippingCargusClass();
 
             // setez url si key
-            $this->model_shipping_cargusclass->SetKeys($this->request->post['shipping_cargus_api_url'], $this->request->post['shipping_cargus_api_key']);
+            $this->model_shipping_cargusclass->SetKeys($this->request->post['shipping_cargus_api_url'], $this->request->post['shipping_cargus_api_key'], $this->request->post['shipping_cargus_location_api_url']);
 
             // UC login user
             $fields = array(
@@ -93,6 +118,8 @@ class ControllerExtensionShippingCargus extends Controller {
 		$data['text_service_true'] = $this->language->get('text_service_true');
         $data['entry_api_url'] = $this->language->get('entry_api_url');
         $data['entry_api_key'] = $this->language->get('entry_api_key');
+        $data['entry_location_api_url'] = $this->language->get('entry_location_api_url');
+        $data['entry_location_api_key'] = $this->language->get('entry_location_api_key');
         $data['entry_username'] = $this->language->get('entry_username');
         $data['entry_password'] = $this->language->get('entry_password');
         $data['entry_tax_class'] = $this->language->get('entry_tax_class');
@@ -137,6 +164,18 @@ class ControllerExtensionShippingCargus extends Controller {
 		} else {
 			$data['shipping_cargus_api_key'] = $this->config->get('shipping_cargus_api_key');
 		}
+
+        if (isset($this->request->post['shipping_cargus_location_api_url'])) {
+            $data['shipping_cargus_location_api_url'] = $this->request->post['shipping_cargus_location_api_url'];
+        } else {
+            $data['shipping_cargus_location_api_url'] = $this->config->get('shipping_cargus_location_api_url');
+        }
+
+        if (isset($this->request->post['shipping_cargus_location_api_key'])) {
+            $data['shipping_cargus_location_api_key'] = $this->request->post['shipping_cargus_location_api_key'];
+        } else {
+            $data['shipping_cargus_location_api_key'] = $this->config->get('shipping_cargus_location_api_key');
+        }
 
         if (isset($this->request->post['shipping_cargus_username'])) {
 			$data['shipping_cargus_username'] = $this->request->post['shipping_cargus_username'];

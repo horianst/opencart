@@ -11,6 +11,8 @@ $_['text_service_true'] = 'Active';
 // Entry
 $_['entry_api_url']     = 'API Url';
 $_['entry_api_key']     = 'Subscription Key';
+$_['entry_location_api_url']     = 'Location API Url';
+$_['entry_location_api_key']     = 'Location Subscription Key';
 $_['entry_username']    = 'Username';
 $_['entry_password']    = 'Password';
 $_['entry_tax_class']   = 'Tax Class';

@@ -42,8 +42,12 @@ class ControllerExtensionCargusComanda extends Controller
         // setez url si key
         $this->model_shipping_cargusclass->SetKeys(
             $this->config->get('shipping_cargus_api_url'),
-            $this->config->get('shipping_cargus_api_key')
+            $this->config->get('shipping_cargus_api_key'),
+            $this->config->get('shipping_cargus_location_api_url'),
+            $this->config->get('shipping_cargus_location_api_key')
         );
+
+        $this->updateLocations();
 
         // UC login user
         $fields = array(
@@ -154,7 +158,7 @@ class ControllerExtensionCargusComanda extends Controller
                                 "SELECT * FROM awb_cargus WHERE barcode = '0' AND id = '" . addslashes($id) . "'"
                             );
 
-                            if(!$row->row['postcode']){
+                            if (!$row->row['postcode']) {
                                 $errors[] = $this->language->get('text_postalcode') . ' ' . $row->row['order_id'];
                                 continue;
                             } else {
@@ -208,10 +212,10 @@ class ControllerExtensionCargusComanda extends Controller
                                         'CustomString' => $row->row['order_id']
                                     ];
 
-                                    if($this->config->get('shipping_cargus_service') == 1) {
-                                        if($row->row['weight'] <= 31){
+                                    if ($this->config->get('shipping_cargus_service') == 1) {
+                                        if ($row->row['weight'] <= 31) {
                                             $fields['ServiceId'] = 34;
-                                        } elseif ($row->row['weight'] <= 50){
+                                        } elseif ($row->row['weight'] <= 50) {
                                             $fields['ServiceId'] = 35;
                                         } else {
                                             $fields['ServiceId'] = 36;
@@ -371,6 +375,84 @@ class ControllerExtensionCargusComanda extends Controller
         $this->response->setOutput($this->load->view('extension/cargus/comanda', $data));
     }
 
+    protected function updateLocations()
+    {
+        $check = $this->db->query(
+            'SELECT id FROM locations_cargus where DATE (`date`) = "' . date('Y-m-d') . '" limit 1'
+        );
+
+        if (empty($check)) {
+            $this->db->query('TRUNCATE TABLE locations_cargus');
+
+            $acceptedFields = [
+                'PudoId',
+                'Name',
+                'LocationId',
+                'CityId',
+                'City',
+                'StreetId',
+                'ZoneId',
+                'PostalCode',
+                'AdditionalAddressInfo',
+                'Longitude',
+                'Latitude',
+                'PointType',
+                'StreetNo',
+                'PaymentType',
+                'CountyId',
+                'County',
+                'Sector',
+                'StreetName'
+            ];
+
+            $locations = $this->model_shipping_cargusclass->CallLocationMethod();
+
+            foreach ($locations as $key => $location) {
+                $locations[$key]['PudoId'] = $locations[$key]['Id'];
+
+                foreach ($location as $field => $value) {
+                    if (!in_array($field, $acceptedFields)) {
+                        unset($locations[$key][$field]);
+                    }
+                }
+            }
+
+            $values = [];
+
+            foreach ($locations as $key => $location) {
+                if (!$location['Longitude'] || !$location['Latitude']) {
+                    continue;
+                }
+
+                $values[] = '(' . $location['PudoId'] . ', "'
+                    . $location['Name'] . '", '
+                    . $location['LocationId'] . ', '
+                    . $location['CityId'] . ', "'
+                    . $location['City'] . '", '
+                    . $location['StreetId'] . ', '
+                    . $location['ZoneId'] . ', "'
+                    . $location['PostalCode'] . '", "'
+                    . $location['AdditionalAddressInfo'] . '", '
+                    . $location['Longitude'] . ', '
+                    . $location['Latitude'] . ', "'
+                    . $location['PointType'] . '", "'
+                    . $location['StreetNo'] . '", '
+                    . $location['PaymentType'] . ', '
+                    . $location['CountyId'] . ', "'
+                    . $location['County'] . '", "'
+                    . $location['Sector'] . '", "'
+                    . $location['StreetName'] . '")';
+            }
+
+            $insertQuery = 'INSERT INTO locations_cargus (' . implode(', ', $acceptedFields) . ') VALUES ' . implode(
+                    ', ',
+                    $values
+                );
+
+            $this->db->query($insertQuery);
+        }
+    }
+
     protected function validate()
     {
         if (!$this->user->hasPermission('modify', 'extension/cargus/comanda')) {
@@ -437,11 +519,13 @@ class ControllerExtensionCargusComanda extends Controller
             'user_token=' . $this->session->data['user_token'],
             'SSL'
         );
-        $data['url_validate'] = html_entity_decode($this->url->link(
-            'extension/cargus/comanda/validate_order',
-            'user_token=' . $this->session->data['user_token'],
-            'SSL'
-        ));
+        $data['url_validate'] = html_entity_decode(
+            $this->url->link(
+                'extension/cargus/comanda/validate_order',
+                'user_token=' . $this->session->data['user_token'],
+                'SSL'
+            )
+        );
 
         $date = new DateTime();
         $date->setTimezone(new DateTimeZone('Europe/Bucharest'));

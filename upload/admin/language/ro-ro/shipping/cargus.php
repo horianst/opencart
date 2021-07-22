@@ -8,6 +8,8 @@ $_['text_success']      = 'Succes: Ati modificat metoda de livrare Cargus!';
 $_['text_error']        = 'Atentie: ';
 $_['text_service_false'] = 'Inactiv';
 $_['text_service_true'] = 'Activ';
+$_['text_location_false'] = 'Inactiv';
+$_['text_location_true'] = 'Activ';
 // Entry
 $_['entry_api_url']     = 'API Url';
 $_['entry_api_key']     = 'Subscription Key';
@@ -20,5 +22,6 @@ $_['entry_geo_zone']    = 'Zona geografica';
 $_['entry_status']      = 'Status';
 $_['entry_sort_order']  = 'Ordine';
 $_['entry_service']  = 'Serviciu';
+$_['entry_location']    = 'Easy box';
 // Error
 $_['error_permission'] = 'Atentie: Nu aveti permisiunea de a edita metoda de livrare Cargus!';

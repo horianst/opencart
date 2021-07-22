@@ -109,6 +109,15 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-location">{{ entry_location }}</label>
+                        <div class="col-sm-10">
+                            <select name="shipping_cargus_location" id="input-location" class="form-control">
+                                <option value=0 {% if shipping_cargus_location == 0 %} selected="selected" {% endif %}>{{ text_location_false }}</option>
+                                <option value=1 {% if shipping_cargus_location == 1 %} selected="selected" {% endif %}>{{ text_location_true }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-location_api_url">{{ entry_location_api_url }}</label>
                         <div class="col-sm-10">
                             <input type="text" name="shipping_cargus_location_api_url" id="input-location_api_url" value="{{ shipping_cargus_location_api_url }}" placeholder="{{ entry_location_api_url }}" class="form-control" />

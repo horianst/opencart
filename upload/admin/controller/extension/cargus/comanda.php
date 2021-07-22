@@ -47,7 +47,9 @@ class ControllerExtensionCargusComanda extends Controller
             $this->config->get('shipping_cargus_location_api_key')
         );
 
-        $this->updateLocations();
+        if($this->config->get('shipping_cargus_location')){
+            $this->updateLocations();
+        }
 
         // UC login user
         $fields = array(
@@ -381,7 +383,7 @@ class ControllerExtensionCargusComanda extends Controller
             'SELECT id FROM locations_cargus where DATE (`date`) = "' . date('Y-m-d') . '" limit 1'
         );
 
-        if (empty($check)) {
+        if (empty($check->rows)){
             $this->db->query('TRUNCATE TABLE locations_cargus');
 
             $acceptedFields = [

@@ -25,6 +25,7 @@ class ControllerExtensionShippingCargus extends Controller {
                             `county_name` varchar(128) NOT NULL,
                             `street_name` varchar(128) NOT NULL,
                             `number` int(11) NOT NULL,
+                            `pudo_id` int(11),
                             `address` varchar(256) NOT NULL,
                             `postcode` varchar(64) NOT NULL,
                             `contact` varchar(64) NOT NULL,
@@ -116,6 +117,8 @@ class ControllerExtensionShippingCargus extends Controller {
 		$data['text_standard_pallet'] = $this->language->get('text_standard_pallet');
 		$data['text_service_false'] = $this->language->get('text_service_false');
 		$data['text_service_true'] = $this->language->get('text_service_true');
+		$data['text_location_false'] = $this->language->get('text_location_false');
+		$data['text_location_true'] = $this->language->get('text_location_true');
         $data['entry_api_url'] = $this->language->get('entry_api_url');
         $data['entry_api_key'] = $this->language->get('entry_api_key');
         $data['entry_location_api_url'] = $this->language->get('entry_location_api_url');
@@ -127,6 +130,7 @@ class ControllerExtensionShippingCargus extends Controller {
 		$data['entry_status'] = $this->language->get('entry_status');
 		$data['entry_sort_order'] = $this->language->get('entry_sort_order');
 		$data['entry_service'] = $this->language->get('entry_service');
+		$data['entry_location'] = $this->language->get('entry_location');
 		$data['button_save'] = $this->language->get('button_save');
 		$data['button_cancel'] = $this->language->get('button_cancel');
 
@@ -224,6 +228,12 @@ class ControllerExtensionShippingCargus extends Controller {
 		} else {
 			$data['shipping_cargus_service'] = $this->config->get('shipping_cargus_service');
 		}
+
+        if (isset($this->request->post['shipping_cargus_location'])) {
+            $data['shipping_cargus_location'] = $this->request->post['shipping_cargus_location'];
+        } else {
+            $data['shipping_cargus_location'] = $this->config->get('shipping_cargus_location');
+        }
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');

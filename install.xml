@@ -148,4 +148,67 @@
                 ]]></add>
         </operation>
     </file>
+
+    <file path="catalog/view/theme/*/template/checkout/shipping_address.twig">
+        <operation>
+            <search index="1"><![CDATA[ <div class="radio"> ]]></search>
+            <add position="replace"><![CDATA[
+			  <div class="radio">
+    <label>
+      <input type="radio" name="shipping_address" value="box" />
+      {{ text_address_box }}</label>
+  </div>
+  <div id="shipping-box">
+    <div><input type="text" id="result"></div>
+    <div id="map" style="height: 700px; width: 100%;"></div>
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZzkzxM8yXiC6UtVYlfthXj7qQOZS9ER4&callback=changeGoogleMap&libraries=&v=weekly" async></script>
+    <script type="text/javascript" src="catalog/view/javascript/map.js"></script>
+  </div>
+  <div class="radio">
+                ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[ $('#shipping-new').show(); ]]></search>
+            <add position="after"><![CDATA[ $('#shipping-box').hide(); ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[ $('#shipping-new').hide(); ]]></search>
+            <add position="after"><![CDATA[ $('#shipping-box').hide(); ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[ if (this.value == 'new') { ]]></search>
+            <add position="replace"><![CDATA[
+                if (this.value == 'box') {
+                    $('#shipping-existing').hide();
+		            $('#shipping-new').hide();
+		            $('#shipping-box').show();
+                } else if (this.value == 'new') { ]]></add>
+        </operation>
+    </file>
+
+    <file path="catalog/view/theme/*/template/checkout/guest_shipping.twig">
+        <operation>
+            <search><![CDATA[ <form class="form-horizontal"> ]]></search>
+            <add position="before"><![CDATA[
+  <div>
+    <label>
+        <input type="checkbox" name="shipping_box" value="1"/>
+    {{ entry_shipping }}</label>
+  </div>
+  <div id="shipping-box">
+    <div><input type="text" id="result"></div>
+    <div id="map" style="height: 700px; width: 100%;"></div>
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZzkzxM8yXiC6UtVYlfthXj7qQOZS9ER4&callback=changeGoogleMap&libraries=&v=weekly" async></script>
+    <script type="text/javascript" src="catalog/view/javascript/map.js"></script>
+  </div>
+]]></add>
+        </operation>
+    </file>
+
+    <file path="catalog/language/en-gb/checkout/checkout.php">
+        <operation>
+            <search><![CDATA[ 'I want to use a new address'; ]]></search>
+            <add position="after"><![CDATA[ $_['text_address_box']               = 'I want to use an easy box'; ]]></add>
+        </operation>
+    </file>
 </modification>

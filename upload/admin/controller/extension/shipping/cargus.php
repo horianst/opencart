@@ -218,7 +218,10 @@ class ControllerExtensionShippingCargus extends Controller {
                 $totals[$row['code']] = $row['value'];
             }
 
-            require_once(DIR_SYSTEM . 'library/cart/customer.php');
+            if (!class_exists('Cart\Customer')) {
+                require_once(DIR_SYSTEM . 'library/cart/customer.php');
+            }
+
             $this->registry->set('customer', new Cart\Customer($this->registry));
 
             if (!class_exists('Cart\Tax')) {
